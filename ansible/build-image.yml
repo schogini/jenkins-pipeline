@@ -2,6 +2,7 @@
 - hosts: localhost
   become: true
   gather_facts: no
+  connection: local
 
   tasks:
   - set_fact: BUILD_ID="{{ lookup('env','BUILD_ID') }}"
