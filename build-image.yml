@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: no
+
+  tasks:
+  - set_fact: BUILD_ID="{{ lookup('env','ENV_VAR') }}"
+  - name: Build New Docker Image
+    docker_image:
+      path: ./tomcat
+      name: gayatrisa/tomcat
+      tag: pipeline-{{BUILD_ID}}
+    register: docker_build
