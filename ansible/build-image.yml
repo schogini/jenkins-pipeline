@@ -12,3 +12,5 @@
       name: gayatrisa/tomcat
       tag: pipeline-{{BUILD_ID}}
     register: docker_build
+  - debug:
+      msg: "Docker Image Build Done: gayatrisa/tomcat:pipeline-{{BUILD_ID}}"
