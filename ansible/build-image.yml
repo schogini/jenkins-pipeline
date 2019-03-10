@@ -4,7 +4,7 @@
   gather_facts: no
 
   tasks:
-  - set_fact: BUILD_ID="{{ lookup('env','ENV_VAR') }}"
+  - set_fact: BUILD_ID="{{ lookup('env','BUILD_ID') }}"
   - name: Build New Docker Image
     docker_image:
       path: ./tomcat
