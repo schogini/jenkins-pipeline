@@ -40,8 +40,10 @@ pipeline {
                 }
             }
         }
-        // stage ('Deploy Image') {
-                // sh ("kubectl get deploy")            
-        // }
+        stage ('Deploy Image') {
+	    steps {
+		sh ("kubectl set image deployment/java-deployment tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+	    }
+        }
     }
 }
