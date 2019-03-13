@@ -1,10 +1,6 @@
 def hostWorkspace
 pipeline {
     agent any
-    parameters {
-        string(name: 'JENKINSDIR', defaultValue: '/Developer/Collabera/gayatri/jenkins/new/session1/jenkins_home/workspace/', description: 'Jenkins home dir wrt host docker engine')
-        
-    }
     stages {
         stage ('Build Project') {
             steps {
