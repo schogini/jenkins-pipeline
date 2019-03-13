@@ -42,7 +42,7 @@ pipeline {
         }
         stage ('Deploy Image') {
 	    steps {
-		sh ("kubectl set image deployment/java-deployment tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+		sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
 	    }
         }
     }
