@@ -20,16 +20,20 @@ pipeline {
             }
         }
         stage ('Build Image') {
-            steps {
-                script {
-                    hostWorkspace = env.WORKSPACE.replace("/var/jenkins_home/workspace/", "${JENKINSDIR}")
+            agent {
+                docker {
+                    image "gayatrisa/ansible-with-docker-ws"
+                    args "-v /var/run/docker.sock:/var/run/docker.sock -w /etc/ansible -e 'BUILD_ID=${env.BUILD_ID}'"
                 }
+            }
+            steps {
                 sh("rm -fr ./*")
                 git url: 'https://github.com/gayatri-sa/jenkins-pipeline'
                 unstash 'app'
-                // sh 'ls -la'
-                // sh ("echo '${hostWorkspace}'")
-                sh("docker run --rm --name ansible-ws -v ${hostWorkspace}/ansible:/etc/ansible -v ${hostWorkspace}/tomcat:/etc/ansible/tomcat -v ${hostWorkspace}/target:/etc/ansible/tomcat/target -v /var/run/docker.sock:/var/run/docker.sock -w /etc/ansible -e 'BUILD_ID=${env.BUILD_ID}' gayatrisa/ansible-with-docker-ws ansible-playbook build-image.yml")
+		
+		// move the target folder into the tomcat folder so that it is in the context of the Dockerfile
+                sh('mv target tomcat/')
+                sh("ansible-playbook ansible/build-image.yml")
             }
         }
         stage ('Push Image') {
@@ -38,12 +42,16 @@ pipeline {
                     sh("docker login -u=${DOCKER_USERNAME} -p=${DOCKER_PASSWORD}")
                     sh("docker push gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
                 }
+                
+                // to save space on the local Docker Engine.
+                // we do not need the new image locally
+                sh("docker rmi gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
         stage ('Deploy Image') {
-	    steps {
-		sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
-	    }
+            steps {
+                sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+            }
         }
     }
 }
