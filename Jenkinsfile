@@ -46,6 +46,7 @@ pipeline {
         }
         stage ('Deploy Image') {
             steps {
+		// assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
                 sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
