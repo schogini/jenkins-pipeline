@@ -4,7 +4,7 @@ pipeline {
         stage ('Build Project') {
             steps {
                 git url: 'https://github.com/gayatri-sa/samplejava'
-                withMaven(maven: 'mvn3.6.0') {
+                withMaven(maven: 'mvn3.6.1') {
                     sh 'mvn clean package'
                 }
             }
