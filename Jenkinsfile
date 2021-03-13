@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('Build Project') {
             steps {
-                git url: 'https://github.com/schogini/samplejava'
+                git url: 'https://github.com/schogini/samplejava.git'
                 withMaven(maven: 'mvn3.6.1') {
                     sh 'mvn clean package'
                 }
