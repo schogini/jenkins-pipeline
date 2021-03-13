@@ -32,6 +32,7 @@ pipeline {
                 unstash 'app'
 		
 		// move the target folder into the tomcat folder so that it is in the context of the Dockerfile
+                sh('rm -fr tomcat/target')
                 sh('mv target tomcat/')
                 sh("ansible-playbook ansible/build-image.yml")
             }
