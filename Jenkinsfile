@@ -1,14 +1,17 @@
 pipeline {
-    agent any
+    // agent any
+    agent { docker { image 'maven:3.6.1' } }
     stages {
         stage ('Build Project') {
             steps {
                 git url: 'https://github.com/schogini/samplejava.git'
-                withMaven(maven: 'mvn3.6.1') {
-                    sh 'mvn clean package'
-                    sh 'ls -l'
-                    sh 'find .'
-                }
+                sh 'mvn --version'
+                sh 'mvn clean package'
+                // withMaven(maven: 'mvn3.6.1') {
+                //     sh 'mvn clean package'
+                //     sh 'ls -l'
+                //     sh 'find .'
+                // }
             }
             post {
                 success {
