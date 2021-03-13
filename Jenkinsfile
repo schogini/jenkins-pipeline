@@ -49,12 +49,20 @@ pipeline {
                 sh("docker rmi schogini/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
-        stage ('Deploy Image') {
-            steps {
-		// assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
-                //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
-                echo "SUCCESS"
+  //       stage ('Deploy Image') {
+  //           steps {
+		// // assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
+  //               //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
+  //               echo "SUCCESS"
+  //           }
+  //       }
+        stage('Deploy Image') {
+            steps{    
+                script {
+                    sh "./deploy.sh $image:${env.BUILD_ID} ${env.BUILD_ID}"
+                    currentBuild.result = 'SUCCESS'
+                }
             }
-        }
+        } 
     }
 }
