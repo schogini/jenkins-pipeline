@@ -46,7 +46,8 @@ pipeline {
                 
                 // to save space on the local Docker Engine.
                 // we do not need the new image locally
-                sh("docker rmi schogini/tomcat:pipeline-${env.BUILD_ID}")
+                
+                // sh("docker rmi schogini/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
   //       stage ('Deploy Image') {
@@ -59,7 +60,7 @@ pipeline {
         stage('Deploy Image') {
             steps{    
                 script {
-                    sh "./deploy.sh $image:${env.BUILD_ID} ${env.BUILD_ID}"
+                    sh "./deploy.sh schogini/tomcat:pipeline-${env.BUILD_ID} ${env.BUILD_ID}"
                     currentBuild.result = 'SUCCESS'
                 }
             }
