@@ -35,18 +35,19 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh("docker login -u=${DOCKER_USERNAME} -p=${DOCKER_PASSWORD}")
-                    sh("docker push gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+                    sh("docker push schogini/tomcat:pipeline-${env.BUILD_ID}")
                 }
                 
                 // to save space on the local Docker Engine.
                 // we do not need the new image locally
-                sh("docker rmi gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+                sh("docker rmi schogini/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
         stage ('Deploy Image') {
             steps {
 		// assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
-                sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=gayatrisa/tomcat:pipeline-${env.BUILD_ID}")
+                //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
+                
             }
         }
     }
