@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('Build Project') {
             steps {
-                git url: 'https://github.com/gayatri-sa/samplejava.git'
+                git url: 'https://github.com/schogini/samplejava.git'
                 withMaven(maven: 'mvn3.6.1') {
                     sh 'mvn clean package'
                 }
@@ -23,7 +23,7 @@ pipeline {
             }
             steps {
                 sh("rm -fr ./*")
-                git url: 'https://github.com/gayatri-sa/jenkins-pipeline'
+                git url: 'https://github.com/schogini/jenkins-pipeline'
                 unstash 'app'
 		
 		// move the target folder into the tomcat folder so that it is in the context of the Dockerfile
