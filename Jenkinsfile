@@ -47,7 +47,7 @@ pipeline {
             steps {
 		// assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
                 //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
-                
+                echo "SUCCESS"
             }
         }
     }
