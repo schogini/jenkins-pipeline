@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-qq=$(docker service ls|grep -c tmp1-svc)
+qq=$(docker service ls|grep -c tmp1-svc2)
 
 #// --update-delay
 
