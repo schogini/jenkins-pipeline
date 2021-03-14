@@ -71,7 +71,7 @@ pipeline {
         //        echo "SUCCESS"
         //    }
         //}
-        stage('Deploy Image') {
+        stage('Deploy Image to Docker Swarm') {
             steps{    
                 script {
                     sh "./deploy.sh schogini/tomcat:pipeline-${env.BUILD_ID} ${env.BUILD_ID}"
