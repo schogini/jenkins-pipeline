@@ -46,7 +46,7 @@ pipeline {
                 sh 'echo "FROM tomcat:8-jre8" > Dockerfile'
                 sh 'echo "COPY target/GSASampleJava.war /usr/local/tomcat/webapps/sample.war" >> Dockerfile'
                 sh 'cat Dockerfile'
-                dockerImage = docker.build "schogini/tomcat:pipeline-" + ":$BUILD_NUMBER"          
+                dockerImage = docker.build "schogini/tomcat:pipeline-" + "$BUILD_NUMBER"          
             }
           }
         }
