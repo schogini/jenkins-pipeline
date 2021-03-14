@@ -8,9 +8,8 @@ pipeline {
                 sh 'mvn --version'
                 sh 'mvn clean package'
                 // withMaven(maven: 'mvn3.6.1') {
-                //     sh 'mvn clean package'
-                //     sh 'ls -l'
-                //     sh 'find .'
+                sh 'pwd'
+                sh 'ls -l'
                 // }
             }
             post {
@@ -19,7 +18,7 @@ pipeline {
                 }
             }
         }
-        stage ('Build Image') {
+        stage ('Build Image - Ansible') { //ANSIBLE
             agent {
                 docker {
                     image "gayatrisa/ansible-with-docker-ws"
@@ -30,13 +29,28 @@ pipeline {
                 sh("rm -fr ./*")
                 git url: 'https://github.com/schogini/jenkins-pipeline'
                 unstash 'app'
-		
-		// move the target folder into the tomcat folder so that it is in the context of the Dockerfile
+                sh 'pwd'
+                sh 'ls -l'		
+		        // move the target folder into the tomcat folder so that 
+                // it is in the context of the Dockerfile
                 sh('rm -fr tomcat/target')
                 sh('mv target tomcat/')
                 sh("ansible-playbook ansible/build-image.yml")
             }
         }
+
+        stage('Building Image Docker Agent') { //SREE
+          steps{
+            script {
+                unstash 'app'
+                sh 'echo "FROM tomcat:8-jre8" > Dockerfile'
+                sh 'echo "COPY target/GSASampleJava.war /usr/local/tomcat/webapps/sample.war" >> Dockerfile'
+                sh 'cat Dockerfile'
+                dockerImage = docker.build "schogini/tomcat:pipeline-" + ":$BUILD_NUMBER"          
+            }
+          }
+        }
+
         stage ('Push Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -50,13 +64,13 @@ pipeline {
                 // sh("docker rmi schogini/tomcat:pipeline-${env.BUILD_ID}")
             }
         }
-  //       stage ('Deploy Image') {
-  //           steps {
-		// // assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
-  //               //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
-  //               echo "SUCCESS"
-  //           }
-  //       }
+        // stage ('Deploy Image') {
+        //    steps {
+        //        // assumption is made that the deployment deploy/gsa-deploy-tomcat is already created
+        //        //sh ("kubectl set image deploy/gsa-deploy-tomcat tomcat=schogini/tomcat:pipeline-${env.BUILD_ID}")
+        //        echo "SUCCESS"
+        //    }
+        //}
         stage('Deploy Image') {
             steps{    
                 script {
@@ -67,3 +81,4 @@ pipeline {
         } 
     }
 }
+
